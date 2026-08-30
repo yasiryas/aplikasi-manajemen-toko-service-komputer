@@ -86,7 +86,8 @@ Seeder membuat dua akun:
 | Peran | Email | Kata Sandi |
 | --- | --- | --- |
 | Admin | `admin@mail.com` | `admin123` |
-| Teknisi (Customer Service) | `customer@mail.com` | `teknisi123` |
+| Teknisi | `teknisi@mail.com` | `teknisi123` |
+| Customer (User) | `customer@mail.com` | `user123` |
 
 Seeder juga menyertakan 6 pelanggan, perangkat, tiket service dalam berbagai status, invoice, dan riwayat.
 
