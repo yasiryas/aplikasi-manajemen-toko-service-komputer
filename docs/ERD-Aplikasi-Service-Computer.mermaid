@@ -1,0 +1,84 @@
+erDiagram
+    CUSTOMERS ||--o{ DEVICES : memiliki
+    DEVICES ||--o{ SERVICE_ORDERS : "diperbaiki via"
+    SERVICE_ORDERS ||--o{ SERVICE_LOGS : "memiliki riwayat"
+    SERVICE_ORDERS ||--o| INVOICES : menghasilkan
+    INVOICES ||--o{ INVOICE_ITEMS : berisi
+    SERVICE_ORDERS ||--o{ NOTIFICATION_LOGS : memicu
+    USERS ||--o{ SERVICE_ORDERS : "ditugaskan sebagai teknisi"
+    USERS ||--o{ SERVICE_LOGS : "mengubah status"
+
+    CUSTOMERS {
+        bigint id PK
+        varchar nama
+        varchar no_hp UK
+        text alamat
+        timestamp created_at
+    }
+
+    DEVICES {
+        bigint id PK
+        bigint customer_id FK
+        enum jenis
+        varchar merk
+        varchar model
+        text keluhan
+        timestamp created_at
+    }
+
+    SERVICE_ORDERS {
+        bigint id PK
+        bigint device_id FK
+        varchar no_tiket UK
+        enum status
+        bigint teknisi_id FK
+        decimal estimasi_biaya
+        date tanggal_masuk
+        date tanggal_selesai
+        timestamp created_at
+    }
+
+    SERVICE_LOGS {
+        bigint id PK
+        bigint service_order_id FK
+        varchar status
+        text catatan
+        bigint changed_by FK
+        timestamp created_at
+    }
+
+    INVOICES {
+        bigint id PK
+        bigint service_order_id FK
+        decimal total_biaya
+        enum status_bayar
+        enum metode_bayar
+        timestamp created_at
+    }
+
+    INVOICE_ITEMS {
+        bigint id PK
+        bigint invoice_id FK
+        varchar nama_item
+        enum tipe
+        int qty
+        decimal harga
+    }
+
+    NOTIFICATION_LOGS {
+        bigint id PK
+        bigint service_order_id FK
+        enum channel
+        enum status
+        text pesan
+        timestamp created_at
+    }
+
+    USERS {
+        bigint id PK
+        varchar nama
+        varchar email UK
+        enum role
+        varchar password
+        timestamp created_at
+    }
