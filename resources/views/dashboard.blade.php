@@ -12,8 +12,14 @@
             </p>
         </div>
         <div class="flex gap-2">
-            <a href="{{ route('service-orders.index') }}" class="btn-secondary"><i class="fa-solid fa-list-check mr-1.5"></i>Lihat Semua Tiket</a>
-            <a href="{{ route('invoices.index') }}" class="btn-secondary"><i class="fa-solid fa-file-invoice-dollar mr-1.5"></i>Invoice</a>
+            @if (auth()->user()->isUser())
+                <a href="{{ route('service-orders.progress') }}" class="btn-primary"><i class="fa-solid fa-arrow-trend-up mr-1.5"></i>Progres Servis Saya</a>
+            @else
+                <a href="{{ route('service-orders.index') }}" class="btn-secondary"><i class="fa-solid fa-list-check mr-1.5"></i>Lihat Semua Tiket</a>
+                @if (auth()->user()->isAdmin())
+                    <a href="{{ route('invoices.index') }}" class="btn-secondary"><i class="fa-solid fa-file-invoice-dollar mr-1.5"></i>Invoice</a>
+                @endif
+            @endif
         </div>
     </div>
 
@@ -115,12 +121,16 @@
     </section>
 
     @push('modals')
-        <x-modal id="modal-order-form" title="Form Tiket Service">
-            @include('service-orders.partials.order-form')
-        </x-modal>
+        @if (auth()->user()->isStaff())
+            <x-modal id="modal-order-form" title="Form Tiket Service">
+                @include('service-orders.partials.order-form')
+            </x-modal>
+        @endif
     @endpush
 
+    @if (auth()->user()->isStaff())
     <button type="button" class="btn-fab md:hidden" onclick="openModal('modal-order-form')" aria-label="Tiket baru">
         <i class="fa-solid fa-plus text-xl"></i>
     </button>
+    @endif
 @endsection

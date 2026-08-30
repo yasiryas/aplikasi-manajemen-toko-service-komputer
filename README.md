@@ -81,7 +81,7 @@ Kunjungi `http://localhost:8000`.
 
 ## Akun Demo
 
-Seeder membuat dua akun:
+Seeder membuat tiga akun dan menghubungkan tiga pelanggan sampel ke akun Customer:
 
 | Peran | Email | Kata Sandi |
 | --- | --- | --- |
@@ -95,6 +95,7 @@ Seeder juga menyertakan 6 pelanggan, perangkat, tiket service dalam berbagai sta
 
 - **Admin** — semua fitur: kelola pelanggan, perangkat, tiket, invoice, dan menu Pengaturan.
 - **Teknisi** — membuat & memperbarui tiket service, mengubah status, kirim notifikasi, serta melihat dashboard, pelanggan, dan perangkat.
+- **Customer (User)** — halaman **Progres Servis**: melihat status, estimasi, dan riwayat pengerjaan tiket perangkatnya sendiri; dashboard juga dibatasi pada data miliknya.
 
 Pembatasan akses diterapkan dua lapis: middleware `role:admin` pada rute dan pemeriksaan otorisasi pada Form Request serta `ServiceOrderPolicy`.
 

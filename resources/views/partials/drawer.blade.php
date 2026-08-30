@@ -18,22 +18,31 @@
                     <x-slot:icon><i class="fa-solid fa-gauge-high fa-fw"></i></x-slot:icon>
                     Dashboard
                 </x-nav.link>
-                <x-nav.link href="{{ route('customers.index') }}" :active="request()->routeIs('customers*')">
-                    <x-slot:icon><i class="fa-solid fa-users fa-fw"></i></x-slot:icon>
-                    Pelanggan
-                </x-nav.link>
-                <x-nav.link href="{{ route('devices.index') }}" :active="request()->routeIs('devices*')">
-                    <x-slot:icon><i class="fa-solid fa-hard-drive fa-fw"></i></x-slot:icon>
-                    Perangkat
-                </x-nav.link>
-                <x-nav.link href="{{ route('service-orders.index') }}" :active="request()->routeIs('service-orders*')">
-                    <x-slot:icon><i class="fa-solid fa-list-check fa-fw"></i></x-slot:icon>
-                    Tiket Service
-                </x-nav.link>
-                <x-nav.link href="{{ route('invoices.index') }}" :active="request()->routeIs('invoices*')">
-                    <x-slot:icon><i class="fa-solid fa-file-invoice-dollar fa-fw"></i></x-slot:icon>
-                    Invoice
-                </x-nav.link>
+                @if (auth()->user()->isUser())
+                    <x-nav.link href="{{ route('service-orders.progress') }}" :active="request()->routeIs('service-orders.progress')">
+                        <x-slot:icon><i class="fa-solid fa-arrow-trend-up fa-fw"></i></x-slot:icon>
+                        Progres Servis
+                    </x-nav.link>
+                @else
+                    <x-nav.link href="{{ route('customers.index') }}" :active="request()->routeIs('customers*')">
+                        <x-slot:icon><i class="fa-solid fa-users fa-fw"></i></x-slot:icon>
+                        Pelanggan
+                    </x-nav.link>
+                    <x-nav.link href="{{ route('devices.index') }}" :active="request()->routeIs('devices*')">
+                        <x-slot:icon><i class="fa-solid fa-hard-drive fa-fw"></i></x-slot:icon>
+                        Perangkat
+                    </x-nav.link>
+                    <x-nav.link href="{{ route('service-orders.index') }}" :active="request()->routeIs('service-orders*')">
+                        <x-slot:icon><i class="fa-solid fa-list-check fa-fw"></i></x-slot:icon>
+                        Tiket Service
+                    </x-nav.link>
+                    @if (auth()->user()->isAdmin())
+                        <x-nav.link href="{{ route('invoices.index') }}" :active="request()->routeIs('invoices*')">
+                            <x-slot:icon><i class="fa-solid fa-file-invoice-dollar fa-fw"></i></x-slot:icon>
+                            Invoice
+                        </x-nav.link>
+                    @endif
+                @endif
                 <x-nav.link href="{{ route('dokumentasi') }}" :active="request()->routeIs('dokumentasi')">
                     <x-slot:icon><i class="fa-solid fa-book fa-fw"></i></x-slot:icon>
                     Dokumentasi

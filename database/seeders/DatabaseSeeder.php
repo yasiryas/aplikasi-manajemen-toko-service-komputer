@@ -158,5 +158,9 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
+
+        $customerUser = User::where('email', 'customer@mail.com')->first();
+        Customer::whereIn('no_hp', ['081234567890', '082112345678', '085678901234'])
+            ->update(['user_id' => $customerUser->id]);
     }
 }

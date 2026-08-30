@@ -12,6 +12,7 @@ use App\Models\ServiceOrder;
 use App\Models\User;
 use App\Services\WhatsAppNotificationService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -30,6 +31,8 @@ class ServiceOrderController extends Controller
             ->when($status, fn ($query) => $query->where('status', $status))
             ->when($request->user()->role === UserRole::Teknisi, fn ($query) => $query
                 ->where(fn ($q) => $q->where('teknisi_id', $request->user()->id)->orWhereNull('teknisi_id')))
+            ->when($request->user()->isUser(), fn ($query) => $query
+                ->whereHas('device.customer', fn ($q) => $q->where('user_id', $request->user()->id)))
             ->latest()
             ->paginate(12)
             ->withQueryString();
@@ -39,6 +42,25 @@ class ServiceOrderController extends Controller
             'currentStatus' => $status,
             'statuses' => ServiceOrderStatus::cases(),
             'technicians' => User::where('role', 'teknisi')->get(),
+        ]);
+    }
+
+    public function progress(Request $request): View|RedirectResponse
+    {
+        if ($request->user()->isStaff()) {
+            return redirect()->route('service-orders.index');
+        }
+
+        $orders = ServiceOrder::query()
+            ->with(['device.customer', 'teknisi', 'logs' => fn ($query) => $query->with('changedBy')->latest()])
+            ->whereHas('device.customer', fn ($query) => $query->where('user_id', $request->user()->id))
+            ->latest()
+            ->paginate(12);
+
+        return view('progres.index', [
+            'page' => 'progres',
+            'pageTitle' => 'Progres Servis',
+            'orders' => $orders,
         ]);
     }
 

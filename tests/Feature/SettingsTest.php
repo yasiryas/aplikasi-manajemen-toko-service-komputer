@@ -58,6 +58,7 @@ test('seeder menghasilkan akun admin, teknisi, dan customer', function () {
     expect(User::where('email', 'customer@mail.com')->first()?->role)->toBe(UserRole::User);
     expect(User::where('email', 'admin@mil.com')->exists())->toBeFalse();
     expect(User::where('email', 'user@mail.com')->exists())->toBeFalse();
+    expect(Customer::where('no_hp', '081234567890')->first()?->user_id)->toBe(User::where('email', 'customer@mail.com')->first()?->id);
     expect(Setting::get('nama_toko'))->toBe('Service Computer');
 });
 

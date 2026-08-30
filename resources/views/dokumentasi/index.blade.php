@@ -51,7 +51,7 @@
                             </tr>
                             <tr>
                                 <td class="px-4 py-3 font-medium text-slate-900">User (Customer)</td>
-                                <td class="px-4 py-3">Hanya melihat (read-only): dashboard, data pelanggan, perangkat, dan tiket service.</td>
+                                <td class="px-4 py-3">Login untuk melihat <strong>Progres Servis</strong>: status perbaikan, estimasi, dan riwayat pengerjaan tiket perangkat Anda sendiri.</td>
                             </tr>
                         </tbody>
                     </table>

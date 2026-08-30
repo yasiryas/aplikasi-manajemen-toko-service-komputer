@@ -32,6 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/devices/{device}', [DeviceController::class, 'destroy'])->name('devices.destroy')->middleware('role:admin');
 
     Route::get('/service-orders', [ServiceOrderController::class, 'index'])->name('service-orders.index');
+    Route::get('/progres-saya', [ServiceOrderController::class, 'progress'])->name('service-orders.progress');
     Route::post('/service-orders', [ServiceOrderController::class, 'store'])->name('service-orders.store');
     Route::get('/service-orders/{order}', [ServiceOrderController::class, 'show'])->name('service-orders.show');
     Route::put('/service-orders/{order}', [ServiceOrderController::class, 'update'])->name('service-orders.update');

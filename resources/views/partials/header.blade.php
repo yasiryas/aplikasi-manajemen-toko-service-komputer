@@ -16,6 +16,7 @@
             {{ \Illuminate\Support\Carbon::now()->locale('id')->translatedFormat('l, d F Y') }}
         </p>
 
+        @if (auth()->user()->isAdmin())
         <div class="relative" x-data="{ open: false }" @click.outside="open = false">
             <button class="btn-icon" @click="open = !open" aria-label="Notifikasi">
                 <i class="fa-solid fa-bell"></i>
@@ -28,6 +29,7 @@
                 </a>
             </div>
         </div>
+        @endif
 
         <div class="relative md:hidden" x-data="{ open: false }" @click.outside="open = false">
             <button class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 text-sm font-semibold text-indigo-700" @click="open = !open" aria-label="Menu akun">

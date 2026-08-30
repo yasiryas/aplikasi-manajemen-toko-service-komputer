@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ServiceOrderStatus;
+use App\Models\Device;
 use App\Models\Invoice;
 use App\Models\ServiceOrder;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -36,17 +38,27 @@ class DashboardController extends Controller
     }
 
     /**
+     * Batasi data ke tiket milik akun user (role customer).
+     */
+    private function scopeForRole(Builder $query): Builder
+    {
+        return $query->when(auth()->user()->isUser(), fn (Builder $q) => $q
+            ->whereHas('device.customer', fn (Builder $c) => $c->where('user_id', auth()->id())));
+    }
+
+    /**
      * @return array<string, int|float|string>
      */
     private function cards(): array
     {
         return [
-            'tiket_aktif' => ServiceOrder::whereIn('status', array_map(fn ($s) => $s->value, ServiceOrderStatus::active()))->count(),
-            'menunggu_sparepart' => ServiceOrder::where('status', ServiceOrderStatus::MenungguSparepart)->count(),
-            'selesai_hari_ini' => ServiceOrder::whereIn('status', [ServiceOrderStatus::Selesai, ServiceOrderStatus::Diambil])
+            'tiket_aktif' => $this->scopeForRole(ServiceOrder::query())->whereIn('status', array_map(fn ($s) => $s->value, ServiceOrderStatus::active()))->count(),
+            'menunggu_sparepart' => $this->scopeForRole(ServiceOrder::query())->where('status', ServiceOrderStatus::MenungguSparepart)->count(),
+            'selesai_hari_ini' => $this->scopeForRole(ServiceOrder::query())->whereIn('status', [ServiceOrderStatus::Selesai, ServiceOrderStatus::Diambil])
                 ->whereDate('tanggal_selesai', today())
                 ->count(),
-            'pendapatan_hari_ini' => Invoice::where('status_bayar', 'lunas')->whereDate('created_at', today())->sum('total_biaya'),
+            'pendapatan_hari_ini' => Invoice::when(auth()->user()->isUser(), fn ($query) => $query->whereHas('serviceOrder.device.customer', fn ($c) => $c->where('user_id', auth()->id())))
+                ->where('status_bayar', 'lunas')->whereDate('created_at', today())->sum('total_biaya'),
         ];
     }
 
@@ -55,7 +67,7 @@ class DashboardController extends Controller
      */
     private function recentOrders(): Collection
     {
-        return ServiceOrder::query()
+        return $this->scopeForRole(ServiceOrder::query())
             ->with(['device.customer', 'teknisi', 'invoice'])
             ->latest()
             ->limit(8)
@@ -71,6 +83,8 @@ class DashboardController extends Controller
             ->join('service_orders as so', 'so.id', '=', 'sl.service_order_id')
             ->join('users as u', 'u.id', '=', 'sl.changed_by')
             ->select('sl.service_order_id', 'so.no_tiket', 'sl.status', 'sl.created_at', 'u.name as user')
+            ->when(auth()->user()->isUser(), fn ($query) => $query
+                ->whereIn('so.device_id', Device::whereHas('customer', fn ($c) => $c->where('user_id', auth()->id()))->pluck('id')))
             ->latest('sl.created_at')
             ->limit(10)
             ->get()
@@ -91,7 +105,7 @@ class DashboardController extends Controller
      */
     private function statusSummary(): array
     {
-        $counts = ServiceOrder::query()
+        $counts = $this->scopeForRole(ServiceOrder::query())
             ->select('status', DB::raw('count(*) as total'))
             ->groupBy('status')
             ->pluck('total', 'status');

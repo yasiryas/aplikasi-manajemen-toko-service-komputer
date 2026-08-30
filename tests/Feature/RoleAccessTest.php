@@ -71,3 +71,36 @@ test('teknisi tetap dapat membuat dan mengubah tiket', function () {
         ->patchJson("/service-orders/{$order->id}/status", ['status' => ServiceOrderStatus::Dikerjakan->value])
         ->assertOk();
 });
+
+test('customer hanya melihat progres tiketnya sendiri', function () {
+    $user = seedUserRole(UserRole::User);
+    $mine = Customer::create(['nama' => 'Andi', 'no_hp' => '08511', 'user_id' => $user->id]);
+    $someoneElse = Customer::create(['nama' => 'Bambang', 'no_hp' => '08522']);
+
+    $myDevice = Device::create(['customer_id' => $mine->id, 'jenis' => 'pc', 'merk' => 'Lenovo', 'keluhan' => 'Blank']);
+    $otherDevice = Device::create(['customer_id' => $someoneElse->id, 'jenis' => 'pc', 'merk' => 'Dell', 'keluhan' => 'Hang']);
+
+    $myOrder = ServiceOrder::create([
+        'device_id' => $myDevice->id,
+        'no_tiket' => 'TS-9101',
+        'status' => ServiceOrderStatus::Dikerjakan,
+        'tanggal_masuk' => now()->toDateString(),
+    ]);
+    $otherOrder = ServiceOrder::create([
+        'device_id' => $otherDevice->id,
+        'no_tiket' => 'TS-9102',
+        'status' => ServiceOrderStatus::Antri,
+        'tanggal_masuk' => now()->toDateString(),
+    ]);
+
+    $this->actingAs($user)->get('/progres-saya')
+        ->assertOk()
+        ->assertSee('TS-9101')
+        ->assertDontSee('TS-9102');
+
+    $this->actingAs($user)->get('/service-orders')
+        ->assertSee('TS-9101')
+        ->assertDontSee('TS-9102');
+
+    $this->actingAs(seedUserRole(UserRole::Admin))->get('/progres-saya')->assertRedirect(route('service-orders.index'));
+});
