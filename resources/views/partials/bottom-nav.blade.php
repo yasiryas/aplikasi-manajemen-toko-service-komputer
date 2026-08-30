@@ -2,7 +2,6 @@
     $user = auth()->user();
     if ($user->isUser()) {
         $items = [
-            ['label' => 'Dashboard', 'route' => 'dashboard', 'icon' => 'fa-gauge-high'],
             ['label' => 'Progres', 'route' => 'service-orders.progress', 'icon' => 'fa-arrow-trend-up'],
             ['label' => 'Dokumentasi', 'route' => 'dokumentasi', 'icon' => 'fa-book'],
         ];

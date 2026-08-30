@@ -4,6 +4,11 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="theme-color" content="#4f46e5">
+        <link rel="manifest" href="/manifest.webmanifest">
+        <link rel="apple-touch-icon" href="/icons/icon-192.png">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <title>{{ setting('nama_toko', 'Service Computer') }} — @yield('page-title', 'Dashboard')</title>
         <link rel="icon" href="{{ logo_url() ?? asset('favicon.ico') }}">
         @fonts
@@ -45,5 +50,13 @@
 
         @stack('modals')
         @stack('scripts')
+
+        <script>
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js');
+                });
+            }
+        </script>
     </body>
 </html>

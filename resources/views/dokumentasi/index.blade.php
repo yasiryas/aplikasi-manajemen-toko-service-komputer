@@ -27,6 +27,7 @@
                     <li class="flex gap-2"><i class="fa-solid fa-file-invoice-dollar mt-0.5 text-indigo-500"></i><span><strong>Invoice</strong> — buat invoice dari tiket selesai, cetak, dan tandai lunas.</span></li>
                     <li class="flex gap-2"><i class="fa-solid fa-gauge-high mt-0.5 text-indigo-500"></i><span><strong>Dashboard</strong> — ringkasan statistik dan aktivitas terbaru.</span></li>
                     <li class="flex gap-2"><i class="fa-solid fa-gear mt-0.5 text-indigo-500"></i><span><strong>Pengaturan Toko</strong> — nama, alamat, telepon, catatan invoice, dan upload logo/ikon.</span></li>
+                    <li class="flex gap-2"><i class="fa-solid fa-mobile-screen-button mt-0.5 text-indigo-500"></i><span><strong>Progres Servis (Customer)</strong> — akun pelanggan langsung menuju halaman progres pengerjaan setelah login; aplikasi juga bisa <strong>diinstal sebagai PWA</strong> di HP (menu browser: Instal aplikasi / Add to Home Screen).</span></li>
                 </ul>
             </div>
 

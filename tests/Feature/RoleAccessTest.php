@@ -17,11 +17,13 @@ test('role user dapat melihat halaman tetapi tidak dapat membuat data', function
     $user = seedUserRole(UserRole::User);
     $customer = Customer::create(['nama' => 'Budi', 'no_hp' => '08123']);
 
-    $this->actingAs($user)->get('/dashboard')->assertOk();
+    $this->actingAs($user)->get('/progres-saya')->assertOk();
     $this->actingAs($user)->get('/customers')->assertOk();
     $this->actingAs($user)->get('/devices')->assertOk();
     $this->actingAs($user)->get('/service-orders')->assertOk();
     $this->actingAs($user)->get('/dokumentasi')->assertOk();
+
+    $this->actingAs($user)->get('/dashboard')->assertRedirect(route('service-orders.progress'));
 
     $this->actingAs($user)->postJson('/devices', [
         'customer_id' => $customer->id,

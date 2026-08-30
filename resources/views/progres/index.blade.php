@@ -8,6 +8,9 @@
             <h1 class="font-heading text-2xl font-bold text-slate-900">Progres Servis</h1>
             <p class="mt-1 text-sm text-slate-500">Pantau status perbaikan perangkat Anda secara langsung.</p>
         </div>
+        <button id="pwa-install" type="button" class="btn-primary hidden">
+            <i class="fa-solid fa-download mr-1.5"></i>Instal Aplikasi
+        </button>
     </div>
 
     @if ($orders->isEmpty())
@@ -86,4 +89,29 @@
     <div class="mt-6">
         {{ $orders->links() }}
     </div>
+
+    @push('scripts')
+        <script>
+            let deferredInstall = null;
+            const installBtn = document.getElementById('pwa-install');
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredInstall = e;
+                installBtn.classList.remove('hidden');
+            });
+
+            installBtn.addEventListener('click', async () => {
+                if (!deferredInstall) return;
+                deferredInstall.prompt();
+                await deferredInstall.userChoice;
+                deferredInstall = null;
+                installBtn.classList.add('hidden');
+            });
+
+            window.addEventListener('appinstalled', () => {
+                installBtn.classList.add('hidden');
+            });
+        </script>
+    @endpush
 @endsection

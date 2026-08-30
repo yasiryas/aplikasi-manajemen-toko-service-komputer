@@ -11,13 +11,18 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    public function index(): View
+    public function index(): View|RedirectResponse
     {
+        if (auth()->user()->isUser()) {
+            return redirect()->route('service-orders.progress');
+        }
+
         return view('dashboard', [
             'cards' => $this->cards(),
             'recentOrders' => $this->recentOrders(),

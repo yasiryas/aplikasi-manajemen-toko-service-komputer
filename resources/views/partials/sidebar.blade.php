@@ -17,17 +17,17 @@
     </div>
 
     <nav class="flex-1 space-y-1 overflow-y-auto px-3 py-4">
-        <x-nav.link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard*')">
-            <x-slot:icon><i class="fa-solid fa-gauge-high fa-fw"></i></x-slot:icon>
-            Dashboard
-        </x-nav.link>
-
         @if (auth()->user()->isUser())
             <x-nav.link href="{{ route('service-orders.progress') }}" :active="request()->routeIs('service-orders.progress')">
                 <x-slot:icon><i class="fa-solid fa-arrow-trend-up fa-fw"></i></x-slot:icon>
                 Progres Servis
             </x-nav.link>
         @else
+            <x-nav.link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard*')">
+                <x-slot:icon><i class="fa-solid fa-gauge-high fa-fw"></i></x-slot:icon>
+                Dashboard
+            </x-nav.link>
+
             <x-nav.link href="{{ route('customers.index') }}" :active="request()->routeIs('customers*')">
                 <x-slot:icon><i class="fa-solid fa-users fa-fw"></i></x-slot:icon>
                 Pelanggan

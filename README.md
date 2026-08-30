@@ -95,9 +95,13 @@ Seeder juga menyertakan 6 pelanggan, perangkat, tiket service dalam berbagai sta
 
 - **Admin** — semua fitur: kelola pelanggan, perangkat, tiket, invoice, dan menu Pengaturan.
 - **Teknisi** — membuat & memperbarui tiket service, mengubah status, kirim notifikasi, serta melihat dashboard, pelanggan, dan perangkat.
-- **Customer (User)** — halaman **Progres Servis**: melihat status, estimasi, dan riwayat pengerjaan tiket perangkatnya sendiri; dashboard juga dibatasi pada data miliknya.
+- **Customer (User)** — setelah login langsung masuk ke halaman **Progres Servis**: melihat status, estimasi, dan riwayat pengerjaan tiket perangkatnya sendiri; tanpa dashboard, semua data terbatas miliknya sendiri.
 
 Pembatasan akses diterapkan dua lapis: middleware `role:admin` pada rute dan pemeriksaan otorisasi pada Form Request serta `ServiceOrderPolicy`.
+
+## PWA
+
+Aplikasi bisa diinstal seperti aplikasi native di HP (Android/iOS/PWA-managed browser). Setelah diinstal, customer/login tetap berjalan dan halaman **Progres Servis** bisa dibuka kapan saja. Fasilitas: `manifest.webmanifest`, service worker `sw.js` (precache + offline fallback), ikon 192/512 + maskable.
 
 ## Branding Toko
 
