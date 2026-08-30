@@ -9,7 +9,7 @@
         @fonts
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body data-page="{{ $page ?? '' }}" data-admin="{{ auth()->user()->isAdmin() ? 1 : 0 }}">
+    <body data-page="{{ $page ?? '' }}" data-admin="{{ auth()->user()->isAdmin() ? 1 : 0 }}" data-staff="{{ auth()->user()->isStaff() ? 1 : 0 }}">
         <div
             x-data="{
                 drawerOpen: false,

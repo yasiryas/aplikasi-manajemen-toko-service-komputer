@@ -44,6 +44,13 @@ class DatabaseSeeder extends Seeder
             'password' => 'teknisi123',
         ]);
 
+        User::updateOrCreate(['email' => 'user@mail.com'], [
+            'name' => 'User Biasa',
+            'role' => UserRole::User,
+            'email_verified_at' => now(),
+            'password' => 'user123',
+        ]);
+
         $legacyEmails = ['admin@mil.com', 'teknisi@mil.com', 'budi@mil.com'];
         $legacyIds = User::whereIn('email', $legacyEmails)->pluck('id');
 

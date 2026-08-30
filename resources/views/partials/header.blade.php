@@ -34,7 +34,7 @@
                 {{ strtoupper(Str::substr(auth()->user()->name, 0, 1)) }}
             </button>
             <div x-show="open" x-cloak x-transition class="absolute right-0 mt-2 w-44 rounded-lg border border-slate-200 bg-white p-1.5 shadow-lg">
-                <p class="px-2 py-1.5 text-xs text-slate-500">{{ auth()->user()->name }} · {{ auth()->user()->isAdmin() ? 'Admin' : 'Teknisi' }}</p>
+                <p class="px-2 py-1.5 text-xs text-slate-500">{{ auth()->user()->name }} · {{ auth()->user()->roleLabel() }}</p>
                 <a href="{{ route('dokumentasi') }}" class="mt-1 block border-t border-slate-100 px-2 py-2 text-sm text-slate-600 hover:bg-slate-50">Dokumentasi</a>
                 @if (auth()->user()->isAdmin())
                     <a href="{{ route('settings.edit') }}" class="block px-2 py-2 text-sm text-slate-600 hover:bg-slate-50">Pengaturan</a>

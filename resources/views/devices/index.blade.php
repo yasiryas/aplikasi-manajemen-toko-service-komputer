@@ -8,10 +8,12 @@
             <h1 class="font-heading text-2xl font-bold text-slate-900">Perangkat</h1>
             <p class="mt-0.5 text-sm text-slate-500">Semua perangkat yang pernah diservice.</p>
         </div>
-        <button type="button" class="btn-primary md:self-auto" onclick="openModal('modal-device-form')">
-            <i class="fa-solid fa-plus"></i>
-            Perangkat Baru
-        </button>
+        @if (auth()->user()->isStaff())
+            <button type="button" class="btn-primary md:self-auto" onclick="openModal('modal-device-form')">
+                <i class="fa-solid fa-plus"></i>
+                Perangkat Baru
+            </button>
+        @endif
     </div>
 
     <form method="GET" action="{{ route('devices.index') }}" class="mt-5 flex max-w-md gap-2">

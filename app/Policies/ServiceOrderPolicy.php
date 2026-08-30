@@ -15,22 +15,22 @@ class ServiceOrderPolicy
 
     public function create(User $user): bool
     {
-        return true;
+        return $user->isStaff();
     }
 
     public function update(User $user, ServiceOrder $order): bool
     {
-        return $user->isAdmin() || $this->assignedTo($user, $order);
+        return $user->isStaff() && ($user->isAdmin() || $this->assignedTo($user, $order));
     }
 
     public function changeStatus(User $user, ServiceOrder $order): bool
     {
-        return $user->isAdmin() || $this->assignedTo($user, $order);
+        return $user->isStaff() && ($user->isAdmin() || $this->assignedTo($user, $order));
     }
 
     public function notify(User $user, ServiceOrder $order): bool
     {
-        return $user->isAdmin() || $this->assignedTo($user, $order);
+        return $user->isStaff() && ($user->isAdmin() || $this->assignedTo($user, $order));
     }
 
     public function delete(User $user, ServiceOrder $order): bool

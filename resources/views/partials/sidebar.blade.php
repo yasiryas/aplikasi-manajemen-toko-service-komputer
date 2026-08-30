@@ -62,7 +62,7 @@
             </div>
             <div x-show="!sidebarCollapsed" x-cloak class="min-w-0 flex-1">
                 <p class="truncate text-sm font-semibold text-slate-900">{{ auth()->user()->name }}</p>
-                <p class="text-xs text-slate-500">{{ auth()->user()->isAdmin() ? 'Admin' : 'Teknisi' }}</p>
+                <p class="text-xs text-slate-500">{{ auth()->user()->roleLabel() }}</p>
             </div>
             <div x-show="!sidebarCollapsed" x-cloak>
                 <form method="POST" action="{{ route('logout') }}" onsubmit="RepairStation.confirmLogout(event, this)">

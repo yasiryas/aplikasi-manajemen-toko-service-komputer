@@ -29,10 +29,12 @@
 
     <div class="mt-6 flex items-center justify-between">
         <h2 class="font-heading text-base font-bold text-slate-900">Riwayat Perangkat &amp; Tiket</h2>
-        <button type="button" class="btn-primary" onclick="RepairStation.openDeviceForm({{ $customer->id }})">
-            <i class="fa-solid fa-plus"></i>
-            Perangkat Baru
-        </button>
+        @if (auth()->user()->isStaff())
+            <button type="button" class="btn-primary" onclick="RepairStation.openDeviceForm({{ $customer->id }})">
+                <i class="fa-solid fa-plus"></i>
+                Perangkat Baru
+            </button>
+        @endif
     </div>
 
     <div class="mt-3 grid gap-4 md:grid-cols-2">

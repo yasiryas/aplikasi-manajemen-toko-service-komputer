@@ -51,5 +51,6 @@
         <p class="font-semibold text-slate-600"><i class="fa-solid fa-circle-info mr-1"></i>Akun demo:</p>
         <p class="flex items-center justify-between gap-2">Admin<span class="font-mono text-slate-600">admin@mail.com / admin123</span></p>
         <p class="flex items-center justify-between gap-2">Teknisi<span class="font-mono text-slate-600">customer@mail.com / teknisi123</span></p>
+        <p class="flex items-center justify-between gap-2">User<span class="font-mono text-slate-600">user@mail.com / user123</span></p>
     </div>
 @endsection

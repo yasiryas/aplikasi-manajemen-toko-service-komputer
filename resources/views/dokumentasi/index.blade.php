@@ -49,10 +49,14 @@
                                 <td class="px-4 py-3 font-medium text-slate-900">Teknisi</td>
                                 <td class="px-4 py-3">Membuat &amp; memperbarui tiket service, mengubah status, melihat dashboard, pelanggan, dan perangkat.</td>
                             </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-medium text-slate-900">User</td>
+                                <td class="px-4 py-3">Hanya melihat (read-only): dashboard, data pelanggan, perangkat, dan tiket service.</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
-                <p class="mt-3 text-xs text-slate-400">Akun demo: <code class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-slate-600">admin@mail.com</code> / <code class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-slate-600">admin123</code> dan <code class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-slate-600">customer@mail.com</code> / <code class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-slate-600">teknisi123</code>.</p>
+                <p class="mt-3 text-xs text-slate-400">Akun demo: <code class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-slate-600">admin@mail.com</code> / <code class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-slate-600">admin123</code>, <code class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-slate-600">customer@mail.com</code> / <code class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-slate-600">teknisi123</code>, dan <code class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-slate-600">user@mail.com</code> / <code class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-slate-600">user123</code>.</p>
             </div>
 
             <div class="card p-6">

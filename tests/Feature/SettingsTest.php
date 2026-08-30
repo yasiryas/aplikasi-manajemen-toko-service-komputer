@@ -50,11 +50,12 @@ test('admin dapat mengupload logo toko', function () {
     Storage::disk('public')->assertExists(Setting::get('logo'));
 });
 
-test('seeder menghasilkan akun admin dan customer', function () {
+test('seeder menghasilkan akun admin, teknisi, dan user', function () {
     $this->seed();
 
-    expect(User::where('email', 'admin@mail.com')->exists())->toBeTrue();
-    expect(User::where('email', 'customer@mail.com')->exists())->toBeTrue();
+    expect(User::where('email', 'admin@mail.com')->first()?->role)->toBe(UserRole::Admin);
+    expect(User::where('email', 'customer@mail.com')->first()?->role)->toBe(UserRole::Teknisi);
+    expect(User::where('email', 'user@mail.com')->first()?->role)->toBe(UserRole::User);
     expect(User::where('email', 'admin@mil.com')->exists())->toBeFalse();
     expect(Setting::get('nama_toko'))->toBe('Service Computer');
 });

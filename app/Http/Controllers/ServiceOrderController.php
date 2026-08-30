@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\NotificationStatus;
 use App\Enums\ServiceOrderStatus;
+use App\Enums\UserRole;
 use App\Http\Requests\StoreServiceOrderRequest;
 use App\Http\Requests\UpdateServiceOrderRequest;
 use App\Models\ServiceLog;
@@ -27,7 +28,7 @@ class ServiceOrderController extends Controller
         $orders = ServiceOrder::query()
             ->with(['device.customer', 'teknisi', 'invoice'])
             ->when($status, fn ($query) => $query->where('status', $status))
-            ->when(! $request->user()->isAdmin(), fn ($query) => $query
+            ->when($request->user()->role === UserRole::Teknisi, fn ($query) => $query
                 ->where(fn ($q) => $q->where('teknisi_id', $request->user()->id)->orWhereNull('teknisi_id')))
             ->latest()
             ->paginate(12)

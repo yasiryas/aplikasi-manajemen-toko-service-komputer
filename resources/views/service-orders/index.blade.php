@@ -8,10 +8,12 @@
             <h1 class="font-heading text-2xl font-bold text-slate-900">Tiket Service</h1>
             <p class="mt-0.5 text-sm text-slate-500">Pantau dan kelola antrian perbaikan.</p>
         </div>
-        <button type="button" class="btn-primary md:self-auto" onclick="openModal('modal-order-form')">
-            <i class="fa-solid fa-plus"></i>
-            Tiket Baru
-        </button>
+        @if (auth()->user()->isStaff())
+            <button type="button" class="btn-primary md:self-auto" onclick="openModal('modal-order-form')">
+                <i class="fa-solid fa-plus"></i>
+                Tiket Baru
+            </button>
+        @endif
     </div>
 
     @error('status')
@@ -31,7 +33,11 @@
     @if ($orders->isEmpty())
         <div class="card mt-5 p-16 text-center">
             <p class="text-sm text-slate-400">Tidak ada tiket{{ $currentStatus ? ' berstatus '.$currentStatus->label() : '' }}.</p>
+            @if (auth()->user()->isStaff())
             <button type="button" class="btn-primary mt-4" onclick="openModal('modal-order-form')">Buat Tiket Baru</button>
+        @else
+            <p class="mt-2 text-xs text-slate-400">Anda hanya dapat melihat tiket. Hubungi admin atau teknisi untuk membuat tiket.</p>
+        @endif
         </div>
     @else
         {{-- Tabel desktop --}}
@@ -69,16 +75,20 @@
     @endif
 
     @push('modals')
+        @if (auth()->user()->isStaff())
         <x-modal id="modal-order-form" title="Tiket Baru" maxWidth="md:max-w-2xl">
             @include('service-orders.partials.order-form')
         </x-modal>
+    @endif
 
-        <x-modal id="modal-order-detail" title="Detail Tiket" maxWidth="md:max-w-2xl">
+    <x-modal id="modal-order-detail" title="Detail Tiket" maxWidth="md:max-w-2xl">
             <div id="order-detail-body"><p class="py-6 text-center text-sm text-slate-400">Memuat&hellip;</p></div>
         </x-modal>
     @endpush
 
+    @if (auth()->user()->isStaff())
     <button type="button" class="btn-fab md:hidden" onclick="openModal('modal-order-form')" aria-label="Tiket baru">
         <i class="fa-solid fa-plus"></i>
     </button>
+@endif
 @endsection

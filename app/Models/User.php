@@ -42,6 +42,16 @@ class User extends Authenticatable implements PasskeyUser
         return $this->role === UserRole::Admin;
     }
 
+    public function isStaff(): bool
+    {
+        return in_array($this->role, [UserRole::Admin, UserRole::Teknisi], true);
+    }
+
+    public function roleLabel(): string
+    {
+        return $this->role?->label() ?? '-';
+    }
+
     /**
      * @return HasMany<ServiceOrder, $this>
      */

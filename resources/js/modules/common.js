@@ -183,6 +183,8 @@ function renderOrderDetail(order) {
         .join('') || '<p class="text-xs text-slate-400">Belum ada notifikasi terkirim.</p>';
 
     const invoice = order.invoice;
+    const isAdmin = document.body.dataset.admin === '1';
+    const isStaff = document.body.dataset.staff === '1';
 
     const invoiceBlock = invoice
         ? `<div class="flex items-center justify-between rounded-lg bg-slate-50 px-4 py-3">
@@ -194,11 +196,9 @@ function renderOrderDetail(order) {
             </div>
             <div class="mt-2 flex gap-2">
                 <a href="/invoices/${invoice.id}/print" target="_blank" class="btn-secondary flex-1 !py-2">Cetak Invoice</a>
-                ${invoice.status_bayar !== 'lunas' ? `<button type="button" class="btn-primary flex-1 !py-2" onclick="RepairStation.markPaid(${invoice.id}, true)">Tandai Lunas</button>` : ''}
+                ${invoice.status_bayar !== 'lunas' && isAdmin ? `<button type="button" class="btn-primary flex-1 !py-2" onclick="RepairStation.markPaid(${invoice.id}, true)">Tandai Lunas</button>` : ''}
             </div>`
         : '';
-
-    const isAdmin = document.body.dataset.admin === '1';
 
     const invoiceAction = isAdmin && !invoice && order.status === 'selesai'
         ? `<button type="button" class="btn-primary mb-4" onclick="RepairStation.openInvoiceModal()">Buat Invoice</button>`
@@ -231,7 +231,8 @@ function renderOrderDetail(order) {
             </div>
         </div>
 
-        <div class="mt-5">
+        ${isStaff
+            ? `<div class="mt-5">
             <div class="flex items-center justify-between">
                 <h3 class="font-heading text-sm font-bold text-slate-900">Ubah Status</h3>
                 ${order.notification_logs?.length ? '' : ''}
@@ -243,7 +244,8 @@ function renderOrderDetail(order) {
             <div class="mt-2 flex flex-wrap gap-2">
                 <button type="button" class="btn-secondary !py-2" onclick="RepairStation.reSendNotification(${order.id})">Kirim Ulang Notifikasi</button>
             </div>
-        </div>
+        </div>`
+            : ''}
 
         <div class="mt-5">
             <h3 class="mb-2 font-heading text-sm font-bold text-slate-900">Invoice</h3>
