@@ -57,7 +57,9 @@
                         </tbody>
                     </table>
                 </div>
+                @if (setting('demo_mode', '1') === '1')
                 <p class="mt-3 text-xs text-slate-400">Akun demo: <code class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-slate-600">admin@mail.com</code> / <code class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-slate-600">admin123</code>, <code class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-slate-600">teknisi@mail.com</code> / <code class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-slate-600">teknisi123</code>, dan <code class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-slate-600">customer@mail.com</code> / <code class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-slate-600">user123</code>.</p>
+                @endif
             </div>
 
             <div class="card p-6">

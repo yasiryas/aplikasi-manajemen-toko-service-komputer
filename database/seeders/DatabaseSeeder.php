@@ -29,7 +29,17 @@ class DatabaseSeeder extends Seeder
         Setting::set('telepon_toko', '081234567890');
         Setting::set('tagline_toko', 'Service Komputer');
         Setting::set('footer_invoice', 'Terima kasih telah mempercayakan perbaikan kepada kami.');
+        Setting::set('demo_mode', '1');
 
+        $admin = $this->seedAccounts();
+
+        if (Setting::get('demo_mode') === '1') {
+            $this->seedDemoData($admin);
+        }
+    }
+
+    private function seedAccounts(): User
+    {
         $admin = User::updateOrCreate(['email' => 'admin@mail.com'], [
             'name' => 'Admin Toko',
             'role' => UserRole::Admin,
@@ -59,6 +69,13 @@ class DatabaseSeeder extends Seeder
             ServiceLog::whereIn('changed_by', $legacyIds)->update(['changed_by' => $admin->id]);
             User::whereIn('email', $legacyEmails)->delete();
         }
+
+        return $admin;
+    }
+
+    private function seedDemoData(User $admin): void
+    {
+        $teknisi = User::where('email', 'teknisi@mail.com')->firstOrFail();
 
         $sampleCustomers = [
             ['Budi Santoso', '081234567890', 'Jl. Merdeka No. 12, Jakarta'],

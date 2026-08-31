@@ -63,6 +63,19 @@
             <textarea id="footer_invoice" name="footer_invoice" rows="2" class="input" placeholder="Terima kasih...">{{ old('footer_invoice', setting('footer_invoice')) }}</textarea>
         </div>
 
+        <div class="rounded-xl border border-slate-200 p-4">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <p class="font-medium text-slate-900">Mode Demo</p>
+                    <p class="mt-0.5 text-xs text-slate-500">Menampilkan akun demo di halaman login dan mengisi data contoh (pelanggan, perangkat, tiket, invoice) untuk keperluan demo.</p>
+                </div>
+                <label class="relative inline-flex cursor-pointer items-center">
+                    <input type="checkbox" name="demo_mode" value="1" class="peer sr-only" @checked(setting('demo_mode', '1') === '1')>
+                    <div class="h-6 w-11 rounded-full bg-slate-200 after:absolute after:left-0.5 after:top-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow after:transition peer-checked:bg-brand-600 peer-checked:after:translate-x-5"></div>
+                </label>
+            </div>
+        </div>
+
         <div class="flex justify-end gap-2 border-t border-slate-100 pt-4">
             <button type="submit" class="btn-primary">
                 <i class="fa-solid fa-floppy-disk"></i>

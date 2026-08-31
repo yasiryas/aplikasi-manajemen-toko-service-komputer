@@ -10,6 +10,7 @@ use App\Models\ServiceOrder;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 test('hanya admin yang bisa mengakses halaman pengaturan', function () {
@@ -68,6 +69,37 @@ test('halaman dokumentasi dapat diakses semua peran', function () {
 
     $this->actingAs($teknisi)->get('/dokumentasi')->assertOk()->assertSee('Fitur Utama');
     $this->actingAs($admin)->get('/dokumentasi')->assertOk();
+});
+
+test('akun demo pada halaman login hanya tampil saat mode demo aktif', function () {
+    Setting::set('demo_mode', '1');
+    $this->get('/login')->assertSee('Akun demo');
+
+    Setting::set('demo_mode', '0');
+    $this->get('/login')->assertDontSee('Akun demo');
+});
+
+test('admin dapat mengaktifkan mode demo dan menonaktifkannya', function () {
+    $admin = User::factory()->create(['role' => UserRole::Admin]);
+
+    Setting::set('demo_mode', '0');
+    $this->assertDatabaseCount('customers', 0);
+
+    $this->actingAs($admin)->put('/settings', [
+        'nama_toko' => 'Service Computer',
+        'demo_mode' => '1',
+    ])->assertRedirect();
+
+    expect(Setting::get('demo_mode'))->toBe('1');
+    expect(Customer::where('no_hp', '081234567890')->exists())->toBeTrue();
+
+    $this->actingAs($admin)->put('/settings', [
+        'nama_toko' => 'Service Computer',
+        'demo_mode' => '0',
+    ])->assertRedirect();
+
+    expect(Setting::get('demo_mode'))->toBe('0');
+    expect(DB::table('customers')->whereNull('user_id')->count())->toBe(0);
 });
 
 test('halaman print invoice menampilkan identitas toko dari pengaturan', function () {

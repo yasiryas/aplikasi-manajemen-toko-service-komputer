@@ -47,10 +47,12 @@
         </button>
     </form>
 
+    @if (setting('demo_mode', '1') === '1')
     <div class="mt-6 rounded-lg bg-slate-50 p-3 text-xs text-slate-500">
         <p class="font-semibold text-slate-600"><i class="fa-solid fa-circle-info mr-1"></i>Akun demo:</p>
         <p class="flex items-center justify-between gap-2">Admin<span class="font-mono text-slate-600">admin@mail.com / admin123</span></p>
         <p class="flex items-center justify-between gap-2">Teknisi<span class="font-mono text-slate-600">teknisi@mail.com / teknisi123</span></p>
         <p class="flex items-center justify-between gap-2">Customer<span class="font-mono text-slate-600">customer@mail.com / user123</span></p>
     </div>
+    @endif
 @endsection
