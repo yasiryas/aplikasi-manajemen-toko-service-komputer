@@ -21,13 +21,13 @@
         </div>
 
         <div class="relative w-full max-w-sm">
-            <div class="mb-6 text-center">
-                <img src="{{ logo_url() ?? asset('icons/icon-192.png') }}" alt="{{ setting('nama_toko', 'Service Computer') }}" class="mx-auto mb-3 h-16 w-16 rounded-2xl bg-white object-contain p-2 shadow-lg ring-1 ring-black/5">
-                <h1 class="font-heading text-2xl font-bold text-white">{{ setting('nama_toko', 'Service Computer') }}</h1>
-                <p class="mt-1 text-sm text-brand-100">{{ setting('tagline_toko', 'Service Komputer') }}</p>
-            </div>
-
             <div class="rounded-2xl bg-white p-6 shadow-2xl ring-1 ring-white/20 md:p-8">
+                <div class="mb-6 text-center">
+                    <img src="{{ logo_url() ?? asset('icons/icon-192.png') }}" alt="{{ setting('nama_toko', 'Service Computer') }}" class="mx-auto mb-3 h-16 w-16 rounded-2xl object-contain p-1">
+                    <h1 class="font-heading text-2xl font-bold text-slate-900">{{ setting('nama_toko', 'Service Computer') }}</h1>
+                    <p class="mt-1 text-sm text-slate-500">{{ setting('tagline_toko', 'Service Komputer') }}</p>
+                </div>
+
                 @yield('content')
             </div>
 
