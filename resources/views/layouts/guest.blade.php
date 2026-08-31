@@ -23,7 +23,13 @@
         <div class="relative w-full max-w-sm">
             <div class="rounded-2xl bg-white p-6 shadow-2xl ring-1 ring-white/20 md:p-8">
                 <div class="mb-6 text-center">
-                    <img src="{{ logo_url() ?? asset('icons/icon-192.png') }}" alt="{{ setting('nama_toko', 'Service Computer') }}" class="mx-auto mb-3 h-16 w-16 rounded-2xl object-contain p-1">
+                    @if (logo_url())
+                        <img src="{{ logo_url() }}" alt="{{ setting('nama_toko', 'Service Computer') }}" class="mx-auto mb-3 h-16 w-16 rounded-2xl object-contain p-1">
+                    @else
+                        <div class="mx-auto mb-3 h-16 w-16 rounded-2xl bg-brand-600 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-white">SC</span>
+                        </div>
+                    @endif
                     <h1 class="font-heading text-2xl font-bold text-slate-900">{{ setting('nama_toko', 'Service Computer') }}</h1>
                     <p class="mt-1 text-sm text-slate-500">{{ setting('tagline_toko', 'Service Komputer') }}</p>
                 </div>

@@ -3,9 +3,6 @@
 @section('title', 'Masuk')
 
 @section('content')
-    <h2 class="text-lg font-semibold text-slate-900">Selamat datang kembali</h2>
-    <p class="mt-1 text-sm text-slate-500">Silakan masuk dengan akun Anda.</p>
-
     @if ($errors->any())
         <div class="mt-4 rounded-lg bg-rose-50 p-3 text-sm text-rose-700">
             <i class="fa-solid fa-circle-exclamation mr-1.5"></i>{{ $errors->first() }}
