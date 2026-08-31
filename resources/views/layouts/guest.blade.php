@@ -22,14 +22,7 @@
 
         <div class="relative w-full max-w-sm">
             <div class="mb-6 text-center">
-                @php($logo = logo_url())
-                @if ($logo)
-                    <img src="{{ $logo }}" alt="{{ setting('nama_toko', 'Service Computer') }}" class="mx-auto mb-3 h-16 w-16 rounded-2xl bg-white object-contain p-2 shadow-lg ring-1 ring-black/5">
-                @else
-                    <div class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-brand-600 shadow-lg">
-                        <i class="fa-solid fa-microchip text-2xl"></i>
-                    </div>
-                @endif
+                <img src="{{ logo_url() ?? asset('icons/icon-192.png') }}" alt="{{ setting('nama_toko', 'Service Computer') }}" class="mx-auto mb-3 h-16 w-16 rounded-2xl bg-white object-contain p-2 shadow-lg ring-1 ring-black/5">
                 <h1 class="font-heading text-2xl font-bold text-white">{{ setting('nama_toko', 'Service Computer') }}</h1>
                 <p class="mt-1 text-sm text-brand-100">{{ setting('tagline_toko', 'Service Komputer') }}</p>
             </div>

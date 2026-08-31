@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Invoice {{ $invoice->serviceOrder->no_tiket }} - {{ setting('nama_toko', 'Service Computer') }}</title>
-        <link rel="icon" href="{{ logo_url() ?? asset('favicon.ico') }}">
+        <link rel="icon" href="{{ logo_url() ?? asset('icons/icon-192.png') }}">
         @fonts
         @vite(['resources/css/app.css'])
     </head>

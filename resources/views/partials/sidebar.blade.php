@@ -5,7 +5,7 @@
     <div :class="sidebarCollapsed ? 'md:justify-center' : 'md:justify-between'"
         class="flex h-16 items-center gap-2.5 border-b border-slate-100 px-4">
         <a href="{{ route('dashboard') }}" class="flex min-w-0 items-center gap-2.5">
-            <x-brand-logo iconClass="fa-microchip text-lg" />
+            <x-brand-logo />
             <div x-show="!sidebarCollapsed" x-transition:enter="transition-opacity duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-cloak class="min-w-0">
                 <p class="font-heading truncate text-[15px] font-bold leading-tight text-slate-900">{{ setting('nama_toko', 'Service Computer') }}</p>
                 <p class="truncate text-xs text-slate-500">{{ setting('tagline_toko', 'Service Komputer') }}</p>

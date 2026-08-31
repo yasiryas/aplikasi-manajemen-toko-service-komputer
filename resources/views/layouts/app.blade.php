@@ -10,7 +10,7 @@
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <title>{{ setting('nama_toko', 'Service Computer') }} — @yield('page-title', 'Dashboard')</title>
-        <link rel="icon" href="{{ logo_url() ?? asset('favicon.ico') }}">
+        <link rel="icon" href="{{ logo_url() ?? asset('icons/icon-192.png') }}">
         @fonts
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>

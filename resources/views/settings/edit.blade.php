@@ -27,7 +27,7 @@
             <div>
                 <label class="label">Logo / Ikon</label>
                 <div id="logo-preview" class="flex h-16 w-16 items-center justify-center rounded-xl border border-slate-200 bg-slate-50">
-                    <x-brand-logo boxClass="h-16 w-16 rounded-xl bg-brand-600 text-white" iconClass="fa-microchip text-2xl" />
+                    <x-brand-logo boxClass="h-16 w-16 rounded-xl" />
                 </div>
             </div>
             <div class="min-w-0 flex-1">

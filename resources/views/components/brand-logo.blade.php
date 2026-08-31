@@ -1,11 +1,4 @@
-@props(['boxClass' => 'h-9 w-9 rounded-lg bg-brand-600 text-white', 'iconClass' => 'fa-microchip text-lg'])
+@props(['boxClass' => 'h-9 w-9 rounded-lg'])
 
-@php($logo = logo_url())
-
-@if ($logo)
-    <img src="{{ $logo }}" alt="{{ setting('nama_toko', 'Service Computer') }}" class="{{ $boxClass }} h-auto shrink-0 object-contain object-center p-1">
-@else
-    <div class="flex {{ $boxClass }} shrink-0 items-center justify-center">
-        <i class="fa-solid {{ $iconClass }}"></i>
-    </div>
-@endif
+@php($logo = logo_url() ?? asset('icons/icon-192.png'))
+<img src="{{ $logo }}" alt="{{ setting('nama_toko', 'Service Computer') }}" class="{{ $boxClass }} shrink-0 object-contain p-1" width="36" height="36">
