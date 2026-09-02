@@ -11,12 +11,15 @@ export default defineConfig({
             fonts: [
                 bunny('Lexend', {
                     weights: [600, 700, 800],
+                    preload: false,
                 }),
                 bunny('Inter', {
                     weights: [400, 500, 600],
+                    preload: false,
                 }),
                 bunny('JetBrains Mono', {
                     weights: [400, 600],
+                    preload: false,
                 }),
             ],
         }),

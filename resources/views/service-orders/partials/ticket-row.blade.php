@@ -18,11 +18,18 @@
                 <i class="fa-solid fa-eye"></i>
             </button>
             @if ($order->status->value !== 'diambil')
-                <select class="h-9 rounded-lg border border-slate-300 bg-white px-2 text-xs text-slate-600 focus:border-indigo-500 focus:outline-none" data-status-select aria-label="Ubah status">
+<div class="relative w-full">
+                <select class="w-full h-9 rounded-lg border border-slate-300 bg-white px-2 text-xs text-slate-600 focus:border-indigo-500 focus:outline-none appearance-none" data-status-select aria-label="Ubah status">
+                    <option value="" disabled selected>Pilih status</option>
                     @foreach (\App\Enums\ServiceOrderStatus::cases() as $status)
                         <option value="{{ $status->value }}" {{ $order->status === $status ? 'selected' : '' }}>{{ $status->label() }}</option>
                     @endforeach
                 </select>
+                <div class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500">
+                    <i class="fa-solid fa-chevron-down text-xs"></i>
+                </div>
+            </div>
+            </div>
             @endif
             @if (auth()->user()->isAdmin())
                 <button type="button" class="btn-icon h-9 w-9 text-slate-500 hover:text-rose-600" onclick="RepairStation.deleteOrder({{ $order->id }})" title="Hapus" aria-label="Hapus">

@@ -58,6 +58,15 @@ class User extends Authenticatable implements PasskeyUser
     }
 
     /**
+     * @param  \Illuminate\Database\Eloquent\Builder<User>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<User>
+     */
+    public function scopeTeknisi($query)
+    {
+        return $query->where('role', UserRole::Teknisi);
+    }
+
+    /**
      * @return HasMany<ServiceOrder, $this>
      */
     public function serviceOrdersAsTeknisi(): HasMany

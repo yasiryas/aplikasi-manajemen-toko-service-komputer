@@ -24,25 +24,55 @@ class ServiceOrderController extends Controller
 
     public function index(Request $request): View
     {
-        $status = $request->has('status') ? ServiceOrderStatus::tryFrom($request->string('status')->toString()) : null;
-
-        $orders = ServiceOrder::query()
-            ->with(['device.customer', 'teknisi', 'invoice'])
-            ->when($status, fn ($query) => $query->where('status', $status))
-            ->when($request->user()->role === UserRole::Teknisi, fn ($query) => $query
-                ->where(fn ($q) => $q->where('teknisi_id', $request->user()->id)->orWhereNull('teknisi_id')))
-            ->when($request->user()->isUser(), fn ($query) => $query
-                ->whereHas('device.customer', fn ($q) => $q->where('user_id', $request->user()->id)))
-            ->latest()
-            ->paginate(12)
-            ->withQueryString();
+        $status = $this->statusFrom($request);
+        $orders = $this->filterQuery($request, $status)->paginate(12)->withQueryString();
 
         return view('service-orders.index', [
             'orders' => $orders,
             'currentStatus' => $status,
             'statuses' => ServiceOrderStatus::cases(),
-            'technicians' => User::where('role', 'teknisi')->get(),
+            'technicians' => User::teknisi()->get(),
+            'search' => $request->string('q')->toString(),
         ]);
+    }
+
+    public function table(Request $request): JsonResponse
+    {
+        $status = $this->statusFrom($request);
+        $orders = $this->filterQuery($request, $status)->paginate(12);
+
+        return response()->json([
+            'total' => $orders->total(),
+            'html' => view('service-orders.partials.list', [
+                'orders' => $orders,
+                'currentStatus' => $status,
+            ])->render(),
+        ]);
+    }
+
+    private function statusFrom(Request $request)
+    {
+        return $request->has('status') ? ServiceOrderStatus::tryFrom($request->string('status')->toString()) : null;
+    }
+
+    private function filterQuery(Request $request, $status)
+    {
+        $query = ServiceOrder::query()
+            ->with(['device.customer', 'teknisi'])
+            ->when($status, fn ($q) => $q->where('status', $status))
+            ->when($request->filled('q'), fn ($q) => $q->where(function ($w) use ($request) {
+                $term = "%{$request->string('q')}%";
+                $w->where('no_tiket', 'like', $term)
+                    ->orWhereHas('device', fn ($d) => $d->where('merk', 'like', $term)->orWhere('model', 'like', $term))
+                    ->orWhereHas('device.customer', fn ($c) => $c->where('nama', 'like', $term)->orWhere('no_hp', 'like', $term));
+            }))
+            ->when($request->user()->role === UserRole::Teknisi, fn ($q) => $q
+                ->where(fn ($w) => $w->where('teknisi_id', $request->user()->id)->orWhereNull('teknisi_id')))
+            ->when($request->user()->isUser(), fn ($q) => $q
+                ->whereHas('device.customer', fn ($c) => $c->where('user_id', $request->user()->id)))
+            ->latest();
+
+        return $query;
     }
 
     public function progress(Request $request): View|RedirectResponse

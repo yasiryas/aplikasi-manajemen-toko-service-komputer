@@ -23,18 +23,20 @@ class DashboardController extends Controller
             return redirect()->route('service-orders.progress');
         }
 
+        $statusCounts = $this->statusCounts();
+
         return view('dashboard', [
-            'cards' => $this->cards(),
+            'cards' => $this->cards($statusCounts),
             'recentOrders' => $this->recentOrders(),
             'activity' => $this->activityItems(),
-            'statuses' => $this->statusSummary(),
-            'technicians' => User::where('role', 'teknisi')->get(),
+            'statuses' => $this->statusSummary($statusCounts),
+            'technicians' => User::teknisi()->get(),
         ]);
     }
 
     public function stats(): JsonResponse
     {
-        return response()->json($this->cards());
+        return response()->json($this->cards($this->statusCounts()));
     }
 
     public function activity(): JsonResponse
@@ -52,14 +54,35 @@ class DashboardController extends Controller
     }
 
     /**
+     * @return array<string, int> counts per status value
+     */
+    private function statusCounts(): array
+    {
+        return $this->scopeForRole(ServiceOrder::query())
+            ->select('status', DB::raw('count(*) as total'))
+            ->groupBy('status')
+            ->pluck('total', 'status')
+            ->all();
+    }
+
+    /**
+     * @param  array<string, int>  $countsByStatus
      * @return array<string, int|float|string>
      */
-    private function cards(): array
+    private function cards(array $countsByStatus): array
     {
+        $count = fn (ServiceOrderStatus $status) => (int) ($countsByStatus[$status->value] ?? 0);
+
+        $activeStatuses = array_map(fn ($s) => $s->value, ServiceOrderStatus::active());
+        $tiketAktif = array_sum(array_intersect_key($countsByStatus, array_flip($activeStatuses)));
+
+        $orders = $this->scopeForRole(ServiceOrder::query());
+
         return [
-            'tiket_aktif' => $this->scopeForRole(ServiceOrder::query())->whereIn('status', array_map(fn ($s) => $s->value, ServiceOrderStatus::active()))->count(),
-            'menunggu_sparepart' => $this->scopeForRole(ServiceOrder::query())->where('status', ServiceOrderStatus::MenungguSparepart)->count(),
-            'selesai_hari_ini' => $this->scopeForRole(ServiceOrder::query())->whereIn('status', [ServiceOrderStatus::Selesai, ServiceOrderStatus::Diambil])
+            'tiket_aktif' => $tiketAktif,
+            'menunggu_sparepart' => $count(ServiceOrderStatus::MenungguSparepart),
+            'selesai_hari_ini' => (clone $orders)
+                ->whereIn('status', [ServiceOrderStatus::Selesai, ServiceOrderStatus::Diambil])
                 ->whereDate('tanggal_selesai', today())
                 ->count(),
             'pendapatan_hari_ini' => Invoice::when(auth()->user()->isUser(), fn ($query) => $query->whereHas('serviceOrder.device.customer', fn ($c) => $c->where('user_id', auth()->id())))
@@ -73,7 +96,7 @@ class DashboardController extends Controller
     private function recentOrders(): Collection
     {
         return $this->scopeForRole(ServiceOrder::query())
-            ->with(['device.customer', 'teknisi', 'invoice'])
+            ->with('device.customer')
             ->latest()
             ->limit(8)
             ->get();
@@ -106,20 +129,16 @@ class DashboardController extends Controller
     }
 
     /**
+     * @param  array<string, int>  $countsByStatus
      * @return array<string, array{total: int, class: string}>
      */
-    private function statusSummary(): array
+    private function statusSummary(array $countsByStatus): array
     {
-        $counts = $this->scopeForRole(ServiceOrder::query())
-            ->select('status', DB::raw('count(*) as total'))
-            ->groupBy('status')
-            ->pluck('total', 'status');
-
         $summary = [];
 
         foreach (ServiceOrderStatus::cases() as $status) {
             $summary[$status->label()] = [
-                'total' => (int) $counts->get($status->value, 0),
+                'total' => (int) ($countsByStatus[$status->value] ?? 0),
                 'class' => $status->progressClass(),
             ];
         }

@@ -1,6 +1,7 @@
-export const csrfToken = document
-    .querySelector('meta[name="csrf-token"]')
-    ?.getAttribute('content') ?? '';
+export const csrfToken =
+    document
+        .querySelector('meta[name="csrf-token"]')
+        ?.getAttribute('content') ?? '';
 
 function headers(extra = {}) {
     return {
@@ -14,16 +15,25 @@ function headers(extra = {}) {
 async function request(method, url, body = null, { form = false } = {}) {
     const response = await fetch(url, {
         method,
-        headers: form ? { Accept: 'application/json', 'X-CSRF-TOKEN': csrfToken } : headers(),
+        headers: form
+            ? { Accept: 'application/json', 'X-CSRF-TOKEN': csrfToken }
+            : headers(),
         body: body === null ? undefined : form ? body : JSON.stringify(body),
     });
 
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    const isJson = response.headers
+        .get('content-type')
+        ?.includes('application/json');
 
     const data = isJson ? await response.json() : null;
 
     if (!response.ok) {
-        throw { status: response.status, message: data?.message ?? 'Terjadi kesalahan.', errors: data?.errors, data };
+        throw {
+            status: response.status,
+            message: data?.message ?? 'Terjadi kesalahan.',
+            errors: data?.errors,
+            data,
+        };
     }
 
     return data;
@@ -35,6 +45,7 @@ export const ajax = {
     put: (url, body) => request('PUT', url, body),
     patch: (url, body) => request('PATCH', url, body),
     delete: (url) => request('DELETE', url),
+    postForm: (url, body) => request('POST', url, body, { form: true }),
 };
 
 export function formatRupiah(value) {

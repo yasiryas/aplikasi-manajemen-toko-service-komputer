@@ -39,6 +39,18 @@ test('role user dapat melihat halaman tetapi tidak dapat membuat data', function
     ])->assertForbidden();
 });
 
+test('halaman devices tetap tampil saat customer terarsip', function () {
+    $admin = seedUserRole(UserRole::Admin);
+    $customer = Customer::create(['nama' => 'Terarsip', 'no_hp' => '08999']);
+    Device::create(['customer_id' => $customer->id, 'jenis' => DeviceType::Laptop->value, 'merk' => 'Lenovo', 'keluhan' => 'Blank']);
+    $customer->delete();
+
+    $this->actingAs($admin)
+        ->get('/devices')
+        ->assertOk()
+        ->assertSee('Pelanggan terarsip');
+});
+
 test('role user tidak dapat mengubah status tiket', function () {
     $user = seedUserRole(UserRole::User);
     $admin = User::factory()->create(['role' => UserRole::Admin]);

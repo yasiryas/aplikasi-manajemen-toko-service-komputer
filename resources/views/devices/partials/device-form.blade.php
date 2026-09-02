@@ -4,11 +4,17 @@
     <div class="space-y-4">
         <div>
             <label class="label">Jenis Perangkat</label>
-            <select id="device-jenis" class="input">
-                @foreach (\App\Enums\DeviceType::cases() as $jenis)
-                    <option value="{{ $jenis->value }}">{{ $jenis->label() }}</option>
-                @endforeach
-            </select>
+            <div class="relative">
+                <select id="device-jenis" class="input w-full pr-10 pr-12 appearance-none">
+                    <option value="" disabled selected>Pilih jenis perangkat</option>
+                    @foreach (\App\Enums\DeviceType::cases() as $jenis)
+                        <option value="{{ $jenis->value }}">{{ $jenis->label() }}</option>
+                    @endforeach
+                </select>
+                <div class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500">
+                    <i class="fa-solid fa-chevron-down text-sm"></i>
+                </div>
+            </div>
         </div>
         <div class="grid grid-cols-2 gap-3">
             <div>

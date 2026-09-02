@@ -6,67 +6,41 @@
     <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
             <h1 class="font-heading text-2xl font-bold text-slate-900">Pelanggan</h1>
-            <p class="mt-0.5 text-sm text-slate-500">{{ $customers->total() }} pelanggan terdaftar.</p>
+            <p class="mt-0.5 text-sm text-slate-500"><span id="customer-total">{{ $customers->total() }}</span> pelanggan terdaftar.</p>
         </div>
         @if (auth()->user()->isAdmin())
-            <button type="button" class="btn-primary md:self-auto" onclick="RepairStation.openCustomerForm()">
-                <i class="fa-solid fa-user-plus"></i>
-                Pelanggan Baru
-            </button>
+            <div class="flex flex-wrap gap-2 md:self-auto">
+                <a href="{{ route('customers.export', request()->only('status')) }}" class="btn-secondary">
+                    <i class="fa-solid fa-file-csv"></i>
+                    Ekspor
+                </a>
+                <button type="button" class="btn-secondary" onclick="RepairStation.openImportModal()">
+                    <i class="fa-solid fa-file-import"></i>
+                    Import
+                </button>
+                <button type="button" class="btn-primary" onclick="RepairStation.openCustomerForm()">
+                    <i class="fa-solid fa-user-plus"></i>
+                    Pelanggan Baru
+                </button>
+            </div>
         @endif
+    </div>
+
+    <div class="mt-5 flex gap-2 overflow-x-auto pb-1">
+        <a href="{{ route('customers.index') }}" class="badge shrink-0 px-3 py-1.5 text-sm {{ $currentStatus === '' ? 'bg-indigo-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50' }}">Aktif</a>
+        <a href="{{ route('customers.index', ['status' => 'arsip']) }}" class="badge shrink-0 px-3 py-1.5 text-sm {{ $currentStatus === 'arsip' ? 'bg-indigo-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50' }}">Arsip</a>
     </div>
 
     <form method="GET" action="{{ route('customers.index') }}" class="mt-5 flex max-w-md gap-2">
-        <input type="search" name="q" value="{{ $search }}" class="input" placeholder="Cari nama / no. HP&hellip;">
+        <input type="search" id="customer-search" name="q" value="{{ $search }}" class="input" placeholder="Cari nama / no. HP&hellip;" autocomplete="off">
         <button type="submit" class="btn-primary shrink-0">Cari</button>
     </form>
 
-    <div class="card mt-5 overflow-hidden">
-        @if ($customers->isEmpty())
-            <p class="py-14 text-center text-sm text-slate-400">Belum ada pelanggan.</p>
-        @else
-            <table class="w-full text-left text-sm">
-                <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
-                    <tr>
-                        <th class="px-4 py-3 font-semibold">Nama</th>
-                        <th class="px-4 py-3 font-semibold">No. HP</th>
-                        <th class="px-4 py-3 font-semibold">Perangkat</th>
-                        <th class="px-4 py-3 font-semibold">Alamat</th>
-                        <th class="px-4 py-3 text-right font-semibold">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">
-                    @foreach ($customers as $customer)
-                        <tr class="hover:bg-slate-50/70">
-                            <td class="px-4 py-3">
-                                <a href="{{ route('customers.show', $customer) }}" class="font-medium text-slate-900 hover:text-indigo-600">{{ $customer->nama }}</a>
-                            </td>
-                            <td class="px-4 py-3 font-mono text-xs text-slate-600">{{ $customer->no_hp }}</td>
-                            <td class="px-4 py-3"><span class="badge bg-indigo-100 text-indigo-700">{{ $customer->devices_count }} perangkat</span></td>
-                            <td class="max-w-[200px] truncate px-4 py-3 text-slate-500">{{ $customer->alamat ?? '—' }}</td>
-                            <td class="px-4 py-3">
-                                <div class="flex items-center justify-end gap-1.5">
-                                    <a href="{{ route('customers.show', $customer) }}" class="btn-icon h-9 w-9 text-slate-500 hover:text-indigo-600" aria-label="Lihat detail">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </a>
-                                    @if (auth()->user()->isAdmin())
-                                        <button type="button" class="btn-icon h-9 w-9 text-slate-500 hover:text-indigo-600" onclick="RepairStation.openCustomerForm({{ $customer->toJson() }})" aria-label="Edit">
-                                            <i class="fa-solid fa-pen"></i>
-                                        </button>
-                                        <button type="button" class="btn-icon h-9 w-9 text-slate-500 hover:text-rose-600" onclick="RepairStation.deleteCustomer({{ $customer->id }})" aria-label="Hapus">
-                                            <i class="fa-solid fa-trash-can"></i>
-                                        </button>
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
+    <div id="customer-results" class="card mt-5 overflow-hidden">
+        @include('customers.partials.table', ['customers' => $customers, 'archived' => $currentStatus === 'arsip'])
     </div>
 
-    <div class="mt-5">
+    <div id="customer-pagination" class="mt-5">
         {{ $customers->links() }}
     </div>
 
@@ -74,5 +48,23 @@
         <x-modal id="modal-customer-form" title="Form Pelanggan">
             @include('customers.partials.customer-form')
         </x-modal>
+
+        <x-modal id="modal-customer-detail" title="Detail Pelanggan" maxWidth="md:max-w-2xl">
+            <div id="customer-detail-body"><p class="py-6 text-center text-sm text-slate-400">Memuat&hellip;</p></div>
+        </x-modal>
+
+        @if (auth()->user()->isAdmin())
+        <x-modal id="modal-customer-import" title="Import Pelanggan">
+            <form id="customer-import-form" enctype="multipart/form-data" class="space-y-4">
+                <p class="text-sm text-slate-500">File CSV dengan kolom: <span class="font-mono text-xs text-slate-700">Nama, No HP, Alamat</span> (baris pertama header). Pelanggan dengan No HP yang sama akan diperbarui.</p>
+                <input type="file" id="customer-import-file" accept=".csv" class="input" required>
+                <div id="customer-import-errors" class="hidden rounded-lg bg-rose-50 p-3 text-sm text-rose-700"></div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" class="btn-secondary" data-close-modal>Batal</button>
+                    <button type="submit" class="btn-primary">Import</button>
+                </div>
+            </form>
+        </x-modal>
+        @endif
     @endpush
 @endsection

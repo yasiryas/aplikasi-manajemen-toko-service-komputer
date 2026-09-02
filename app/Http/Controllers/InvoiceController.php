@@ -19,17 +19,37 @@ class InvoiceController extends Controller
 {
     public function index(Request $request): View
     {
-        $invoices = Invoice::query()
-            ->with('serviceOrder.device.customer')
-            ->when($request->filled('status'), fn ($query) => $query->where('status_bayar', $request->string('status')))
-            ->latest()
-            ->paginate(10)
-            ->withQueryString();
+        $invoices = $this->filterQuery($request)->paginate(10)->withQueryString();
 
         return view('invoices.index', [
             'invoices' => $invoices,
             'currentStatus' => $request->string('status')->toString(),
+            'search' => $request->string('q')->toString(),
         ]);
+    }
+
+    public function table(Request $request): JsonResponse
+    {
+        $invoices = $this->filterQuery($request)->paginate(10);
+
+        return response()->json([
+            'total' => $invoices->total(),
+            'html' => view('invoices.partials.list', ['invoices' => $invoices])->render(),
+        ]);
+    }
+
+    private function filterQuery(Request $request)
+    {
+        return Invoice::query()
+            ->with('serviceOrder.device.customer')
+            ->when($request->filled('status'), fn ($query) => $query->where('status_bayar', $request->string('status')))
+            ->when($request->filled('q'), fn ($query) => $query->where(function ($w) use ($request) {
+                $term = "%{$request->string('q')}%";
+                $w->where('id', 'like', $term)
+                    ->orWhereHas('serviceOrder', fn ($o) => $o->where('no_tiket', 'like', $term)
+                        ->orWhereHas('device.customer', fn ($c) => $c->where('nama', 'like', $term)->orWhere('no_hp', 'like', $term)));
+            }))
+            ->latest();
     }
 
     public function readyOrders(): JsonResponse

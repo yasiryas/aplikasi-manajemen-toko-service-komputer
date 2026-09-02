@@ -22,47 +22,39 @@
         <input type="hidden" id="order-new-device-customer">
         <div>
             <label class="label" for="order-device-jenis">Jenis Perangkat</label>
-            <select id="order-device-jenis" class="input">
+            <select id="order-device-jenis" class="input w-full pr-10 pr-12 appearance-none">
+                <option value="" disabled selected>Pilih jenis</option>
                 @foreach (\App\Enums\DeviceType::cases() as $jenis)
                     <option value="{{ $jenis->value }}">{{ $jenis->label() }}</option>
                 @endforeach
             </select>
         </div>
-        <div class="grid grid-cols-2 gap-3">
-            <div>
-                <label class="label" for="order-device-merk">Merk</label>
-                <input type="text" id="order-device-merk" class="input" placeholder="ASUS, Lenovo&hellip;">
-            </div>
-            <div>
-                <label class="label" for="order-device-model">Model</label>
-                <input type="text" id="order-device-model" class="input" placeholder="Opsional">
-            </div>
-        </div>
-        <div>
-            <label class="label" for="order-device-keluhan">Keluhan</label>
-            <textarea id="order-device-keluhan" rows="2" class="input" placeholder="Deskripsi kerusakan&hellip;"></textarea>
-        </div>
-    </div>
 
-    <div class="grid grid-cols-2 gap-3">
-        <div>
+        <div class="relative">
             <label class="label" for="order-status">Status</label>
-            <select id="order-status" class="input">
+            <select id="order-status" class="input w-full pr-10 pr-12 appearance-none">
+                <option value="" disabled selected>Pilih status</option>
                 @foreach (\App\Enums\ServiceOrderStatus::cases() as $status)
                     <option value="{{ $status->value }}">{{ $status->label() }}</option>
                 @endforeach
             </select>
+            <div class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500">
+                <i class="fa-solid fa-chevron-down text-sm"></i>
+            </div>
         </div>
-        <div>
+
+        <div class="relative">
             <label class="label" for="order-tech">Teknisi</label>
-            <select id="order-tech" class="input">
-                <option value="">Belum ditugaskan</option>
+            <select id="order-tech" class="input w-full pr-10 pr-12 appearance-none">
+                <option value="" disabled selected>Pilih teknisi</option>
                 @foreach ($technicians as $technician)
                     <option value="{{ $technician->id }}">{{ $technician->name }}</option>
                 @endforeach
             </select>
+            <div class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500">
+                <i class="fa-solid fa-chevron-down text-sm"></i>
+            </div>
         </div>
-    </div>
 
     <div>
         <label class="label" for="order-estimate">Estimasi Biaya (Rp)</label>

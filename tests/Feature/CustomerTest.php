@@ -53,3 +53,19 @@ test('pencarian pelanggan untuk form tiket', function () {
         ->assertOk()
         ->assertJsonCount(0, 'devices');
 });
+
+test('detail pelanggan untuk modal mengembalikan data lengkap', function () {
+    $admin = User::factory()->create(['role' => UserRole::Admin]);
+    $customer = Customer::create([
+        'nama' => 'Uji Nama',
+        'no_hp' => '081234567891',
+        'alamat' => 'Jl. Ujian No. 1',
+    ]);
+
+    $this->actingAs($admin)
+        ->getJson("/customers/{$customer->id}/detail")
+        ->assertOk()
+        ->assertJsonPath('customer.id', $customer->id)
+        ->assertJsonPath('customer.nama', 'Uji Nama')
+        ->assertJsonPath('customer.no_hp', '081234567891');
+});

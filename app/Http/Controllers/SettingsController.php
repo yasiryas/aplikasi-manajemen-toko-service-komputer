@@ -19,6 +19,25 @@ class SettingsController extends Controller
         return view('settings.edit');
     }
 
+    public function techniciansEdit(): View
+    {
+        $technicians = User::teknisi()->get();
+        $selected_ids = Setting::get('technician_ids', []) ?? [];
+        return view('settings.technicians', ['technicians' => $technicians, 'selected_ids' => $selected_ids]);
+    }
+
+    public function techniciansUpdate(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'technician_ids' => ['array'],
+            'technician_ids.*' => ['exists:users,id'],
+        ]);
+
+        Setting::set('technician_ids', $data['technician_ids']);
+
+        return redirect()->back()->with('status', 'Teknisi berhasil disimpan.');
+    }
+
     public function update(Request $request): RedirectResponse
     {
         $data = $request->validate([
@@ -76,14 +95,14 @@ class SettingsController extends Controller
             return;
         }
 
-        DB::table('invoice_items')->truncate();
-        DB::table('invoices')->truncate();
-        DB::table('notification_logs')->truncate();
-        DB::table('service_logs')->truncate();
-        DB::table('service_orders')->truncate();
-        DB::table('devices')->truncate();
+        DB::table('invoice_items')->delete();
+        DB::table('invoices')->delete();
+        DB::table('notification_logs')->delete();
+        DB::table('service_logs')->delete();
+        DB::table('service_orders')->delete();
+        DB::table('devices')->delete();
 
         $accountIds = User::whereIn('email', ['admin@mail.com', 'teknisi@mail.com', 'customer@mail.com'])->pluck('id');
-        Customer::query()->whereNotIn('user_id', $accountIds)->orWhereNull('user_id')->delete();
+        Customer::query()->whereNotIn('user_id', $accountIds)->orWhereNull('user_id')->forceDelete();
     }
 }

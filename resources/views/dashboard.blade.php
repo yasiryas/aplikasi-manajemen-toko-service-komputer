@@ -5,7 +5,12 @@
 @section('content')
     <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
-            <h1 class="font-heading text-2xl font-bold text-slate-900">Halo, {{ auth()->user()->name }} 👋</h1>
+            <h1 class="font-heading text-2xl font-bold text-slate-900 flex items-center gap-2">
+                <span class="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 text-sm font-semibold text-indigo-700">
+                    <i class="fa-solid fa-hand-sparkles"></i>
+                </span>
+                Halo, {{ auth()->user()->name }}
+            </h1>
             <p class="mt-0.5 flex items-center gap-1.5 text-xs text-slate-500">
                 <span class="inline-block h-2 w-2 animate-pulse rounded-full bg-emerald-500"></span>
                 Data realtime · diperbarui otomatis

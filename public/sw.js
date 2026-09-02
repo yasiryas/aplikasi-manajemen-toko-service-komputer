@@ -1,4 +1,4 @@
-const CACHE_NAME = 'service-computer-v1';
+const CACHE_NAME = 'service-computer-v2';
 const PRECACHE_URLS = [
     '/',
     '/login',
@@ -51,15 +51,12 @@ self.addEventListener('fetch', (event) => {
     }
 
     event.respondWith(
-        caches.match(request).then((cached) => {
-            const network = fetch(request)
-                .then((response) => {
-                    const copy = response.clone();
-                    caches.open(CACHE_NAME).then((cache) => cache.put(request, copy)).catch(() => {});
-                    return response;
-                })
-                .catch(() => cached);
-            return cached || network;
-        })
+        fetch(request)
+            .then((response) => {
+                const copy = response.clone();
+                caches.open(CACHE_NAME).then((cache) => cache.put(request, copy)).catch(() => {});
+                return response;
+            })
+            .catch(() => caches.match(request).then((cached) => cached || caches.match('/offline.html')))
     );
 });

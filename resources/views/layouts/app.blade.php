@@ -17,7 +17,7 @@
     <body data-page="{{ $page ?? '' }}" data-admin="{{ auth()->user()->isAdmin() ? 1 : 0 }}" data-staff="{{ auth()->user()->isStaff() ? 1 : 0 }}">
         <div
             x-data="{
-                drawerOpen: false,
+                sidebarOpen: false,
                 sidebarCollapsed: localStorage.getItem('sidebar-collapsed') === '1',
                 toggleSidebar() {
                     this.sidebarCollapsed = ! this.sidebarCollapsed;
@@ -26,11 +26,8 @@
             }"
             class="min-h-screen bg-slate-100"
         >
-            {{-- Sidebar desktop (bisa dikolaps, ala SB Admin) --}}
+            {{-- Sidebar: off-canvas di mobile, kolaps ala SB Admin di desktop --}}
             @include('partials.sidebar')
-
-            {{-- Drawer mobile --}}
-            @include('partials.drawer')
 
             <div :class="sidebarCollapsed ? 'md:pl-16' : 'md:pl-64'" class="flex min-h-screen flex-col transition-[padding] duration-200">
                 @include('partials.header')

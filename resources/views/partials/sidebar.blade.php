@@ -1,19 +1,26 @@
 <aside
-    :class="sidebarCollapsed ? 'md:w-16' : 'md:w-64'"
-    class="hidden w-64 shrink-0 flex-col border-r border-slate-200 bg-white md:fixed md:inset-y-0 md:left-0 md:flex md:z-40"
+    :class="[
+        sidebarOpen ? 'translate-x-0' : '-translate-x-full',
+        sidebarCollapsed ? 'md:w-16' : 'md:w-64',
+    ]"
+    x-cloak
+    class="fixed inset-y-0 left-0 z-40 flex w-64 shrink-0 flex-col border-r border-slate-200 bg-white shadow-xl transition-transform duration-200 ease-out md:translate-x-0 md:shadow-none"
 >
     <div :class="sidebarCollapsed ? 'md:justify-center' : 'md:justify-between'"
         class="flex h-16 items-center gap-2.5 border-b border-slate-100 px-4">
-        <a href="{{ route('dashboard') }}" class="flex min-w-0 items-center gap-2.5">
+        <button type="button" class="btn-icon h-8 w-8 md:hidden" @click="sidebarOpen = false" aria-label="Tutup sidebar" title="Tutup sidebar">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <a href="{{ route('dashboard') }}"
+            @click="if (sidebarCollapsed) { event.preventDefault(); toggleSidebar(); }"
+            :title="sidebarCollapsed ? 'Perluas sidebar' : ''"
+            class="flex min-w-0 cursor-pointer items-center gap-2.5">
             <x-brand-logo />
             <div x-show="!sidebarCollapsed" x-transition:enter="transition-opacity duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-cloak class="min-w-0">
                 <p class="font-heading truncate text-[15px] font-bold leading-tight text-slate-900">{{ setting('nama_toko', 'Service Computer') }}</p>
                 <p class="truncate text-xs text-slate-500">{{ setting('tagline_toko', 'Service Komputer') }}</p>
             </div>
         </a>
-        <button type="button" class="btn-icon h-8 w-8 hidden shrink-0 md:inline-flex" @click="toggleSidebar()" aria-label="Tutup sidebar" title="Tutup sidebar">
-            <i class="fa-solid fa-bars-staggered text-sm"></i>
-        </button>
     </div>
 
     <nav class="flex-1 space-y-1 overflow-y-auto px-3 py-4">
@@ -47,6 +54,11 @@
                 <x-nav.link href="{{ route('invoices.index') }}" :active="request()->routeIs('invoices*')">
                     <x-slot:icon><i class="fa-solid fa-file-invoice-dollar fa-fw"></i></x-slot:icon>
                     Invoice
+                </x-nav.link>
+
+                <x-nav.link href="{{ route('technicians.edit') }}" :active="request()->routeIs('technicians*')">
+                    <x-slot:icon><i class="fa-solid fa-users-gear fa-fw"></i></x-slot:icon>
+                    Teknisi
                 </x-nav.link>
             @endif
         @endif
@@ -84,3 +96,9 @@
         </div>
     </div>
 </aside>
+
+ {{-- Backdrop mobile --}}
+<div
+    :class="sidebarOpen ? 'flex' : 'hidden'"
+    class="fixed inset-0 z-30 hidden items-stretch bg-slate-900/50 md:hidden"
+    @click="sidebarOpen = false"></div>

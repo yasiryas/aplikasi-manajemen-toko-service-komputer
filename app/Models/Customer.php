@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
@@ -20,6 +21,8 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 #[Fillable(['nama', 'no_hp', 'alamat', 'user_id'])]
 class Customer extends Model
 {
+    use SoftDeletes;
+
     /**
      * @return BelongsTo<User, $this>
      */

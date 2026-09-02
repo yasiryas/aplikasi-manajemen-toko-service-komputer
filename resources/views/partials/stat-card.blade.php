@@ -4,7 +4,7 @@
     <div class="flex items-start justify-between gap-3">
         <div>
             <p class="text-sm text-slate-500">{{ $label }}</p>
-            <p class="mt-1 font-heading text-2xl font-bold text-slate-900 md:text-3xl">{{ $value }}</p>
+            <p class="mt-1 font-heading text-2xl font-bold text-slate-900 md:text-3xl">{!! $value !!}</p>
             @if (isset($hint))
                 <p class="mt-1 text-xs text-slate-400">{{ $hint }}</p>
             @endif

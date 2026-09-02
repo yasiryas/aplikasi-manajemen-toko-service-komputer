@@ -47,7 +47,7 @@
                     </div>
                     <div class="flex gap-1">
                         @if (auth()->user()->isAdmin())
-                            <button type="button" class="btn-icon h-8 w-8 text-slate-500 hover:text-indigo-600" onclick="RepairStation.openDeviceForm({{ $customer->id }}, {{ $device->toJson() }})" aria-label="Edit perangkat">
+                            <button type="button" class="btn-icon h-8 w-8 text-slate-500 hover:text-indigo-600" onclick="RepairStation.openDeviceForm({{ $customer->id }}, {{ $device->id }})" aria-label="Edit perangkat">
                                 <i class="fa-solid fa-pen"></i>
                             </button>
                             <button type="button" class="btn-icon h-8 w-8 text-slate-500 hover:text-rose-600" onclick="RepairStation.deleteDevice({{ $device->id }})" aria-label="Hapus perangkat">
@@ -77,6 +77,10 @@
     @push('modals')
         <x-modal id="modal-device-form" title="Form Perangkat">
             @include('devices.partials.device-form')
+        </x-modal>
+
+        <x-modal id="modal-customer-detail" title="Detail Pelanggan" maxWidth="md:max-w-2xl">
+            <div id="customer-detail-body"><p class="py-6 text-center text-sm text-slate-400">Memuat&hellip;</p></div>
         </x-modal>
     @endpush
 @endsection
